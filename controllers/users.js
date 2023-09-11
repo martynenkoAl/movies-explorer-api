@@ -6,7 +6,7 @@ const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET } = require('../utils/config');
 
 module.exports.addUser = (req, res, next) => {
   const { name, email, password } = req.body;
@@ -65,6 +65,8 @@ module.exports.updateUserData = (req, res, next) => {
     .catch((error) => {
       if (error instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(error.message));
+      } else if (error.code === 11000) {
+        next(new ConflictError('Данный email уже занят'));
       } else {
         next(error);
       }
