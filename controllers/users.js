@@ -6,21 +6,25 @@ const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
-const { NODE_ENV, JWT_SECRET } = require('../utils/config');
+const { JWT_SECRET } = require('../utils/config');
 
 module.exports.addUser = (req, res, next) => {
   const { name, email, password } = req.body;
   bcrypt
     .hash(password, 10)
-    .then((hash) => User.create({
-      name,
-      email,
-      password: hash,
-    }))
-    .then((user) => res.send({
-      name: user.name,
-      email: user.email,
-    }))
+    .then((hash) =>
+      User.create({
+        name,
+        email,
+        password: hash,
+      })
+    )
+    .then((user) =>
+      res.send({
+        name: user.name,
+        email: user.email,
+      })
+    )
     .catch((error) => {
       if (error instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(error.message));
@@ -37,13 +41,9 @@ module.exports.loginUser = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
-        {
-          expiresIn: '7d',
-        },
-      );
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: '7d',
+      });
       res.send({ token });
     })
     .catch(next);
@@ -57,7 +57,7 @@ module.exports.updateUserData = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    },
+    }
   )
     .then((user) => {
       res.send(user);

@@ -2,7 +2,7 @@ const {
   dataMovies = 'mongodb://localhost:27017/bitfilmsdb',
   PORT = 3001,
   NODE_ENV,
-  JWT_SECRET,
+  JWT_SECRET = 'some-secret-key',
 } = process.env;
 
 module.exports = {
