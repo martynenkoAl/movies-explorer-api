@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const movieSchema = new mongoose.Schema(
   {
@@ -26,11 +27,7 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Поле не может быть пустым'],
       validate: {
-        validator(v) {
-          return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/.test(
-            v,
-          );
-        },
+        validator: (v) => validator.isURL(v),
         message: 'Неверный формат URL',
       },
     },
@@ -38,11 +35,7 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Поле не может быть пустым'],
       validate: {
-        validator(v) {
-          return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/.test(
-            v,
-          );
-        },
+        validator: (v) => validator.isURL(v),
         message: 'Неверный формат URL',
       },
     },
@@ -50,11 +43,7 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Поле не может быть пустым'],
       validate: {
-        validator(v) {
-          return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/.test(
-            v,
-          );
-        },
+        validator: (v) => validator.isURL(v),
         message: 'Неверный формат URL',
       },
     },
@@ -76,7 +65,7 @@ const movieSchema = new mongoose.Schema(
       required: [true, 'Поле не может быть пустым'],
     },
   },
-  { versionKey: false },
+  { versionKey: false }
 );
 
 module.exports = mongoose.model('movie', movieSchema);
